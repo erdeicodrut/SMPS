@@ -1,0 +1,173 @@
+html {
+    font-family: sans-serif;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+nav li {
+    float: left;
+}
+
+nav li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav li a:hover {
+    background-color: #111;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.dick {
+    float: right;
+}
+
+nav {
+    position: fixed;
+    top: 0px;
+    width: 100%
+}
+
+#feed {
+    display: block;
+    margin: 5% auto auto;
+}
+
+.mobile {
+    width: 95%;
+}
+
+.web {
+    width: 50%;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+.feedItem {
+    margin-top: 5%;
+    border-color: #c4c4c4;
+    border-style: solid;
+    border-width: 2px;
+}
+
+.comment {
+    padding-top: 10px;
+    color: #3f3f3f;
+    font-size: 120%
+}
+
+
+a {
+    text-decoration: none;
+    color: cornflowerblue;
+}
+
+#numOfLikes {
+    display: inline-block;
+}
+
+.delim {
+    margin: auto;
+    background-color: #8b8b8b;
+    display: block;
+    width: 95%;
+    height: 1px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+
+.commentInput {
+    border: 0px;
+    margin-left: 5%;
+    width: 94%;
+    height: 50%;
+    font-size: 140%;
+    margin-bottom: 1%
+}
+
+.pic {
+    width: 100%;
+    height: 100%;
+}
+
+#feed ul {
+    padding-left: 5%
+}
+
+
+.profilepic {
+    float: left;
+    border-radius: 100%;
+    padding: 2%;
+    width: 6%;
+    height: 6%;
+}
+
+.name {
+    font-size: 130%;
+    font-weight: bold;
+    color: #5353e3;
+}
+
+.PN {
+    display: flex;
+    align-items: center
+}
+
+.likecontainer {
+    margin-top: 2%;
+    margin-bottom: 1%;
+}
+
+.likebutton {
+    border: none;
+    background-color: transparent;
+    font-size: 110%;
+    margin-right: 2%;
+    padding: 0;
+}
+
+#numOfLikes {
+    font-size: 140%;
+}
+
+.gonnaDissapare {
+    font-size: 110%;
+    display: block;
+    padding: 1%;
+    margin: 3%;
+}
+
+#userfield {
+    
+}
+
+#pass {
+    
+}
+
+#login {
+    border: none;
+    background-color: transparent;
+}
+
+#signup {    
+    border: none;
+    background-color: transparent;
+}

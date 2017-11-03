@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">{{s}}</style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>{{l}}</script>
+    <script>
+        const imgur = "https://imgur.com/";
+        var MYUSER = "eumomentan";
+        var KEY = "s";
+
+        $(document).ready(function() {
+            MYUSER = sessionStorage.getItem("username");
+            KEY = sessionStorage.getItem("key");
+            main("http://localhost:8080/getUser/{{u}}");
+        });
+
+        $(window).ready(function () {
+            if (window.innerWidth < 1080) {
+                $("#feed").addClass("mobile");
+                $("#feed").removeClass("web");
+            } else {
+                $("#feed").addClass("web");
+                $("#feed").removeClass("mobile");
+            }
+        });
+    </script>
+</head>
+
+<body>
+<nav>
+    <ul>
+        <li><a id='home' class="active">Home</a></li>
+        <li class="dick">
+            <a href="#dick">
+                <div id="username">
+                    dicks
+                </div>
+            </a>
+        </li>
+
+    </ul>
+</nav>
+
+<ul id="feed">
+    <div id="log"></div>
+</ul>
+
+</body>
+</html>
