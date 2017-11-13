@@ -56,9 +56,6 @@ $(document).ready(function() {
             });
         });
     });
-
-
-
 });
 
 
@@ -72,10 +69,4 @@ $(window).ready(function () {
         $("#feed").addClass("web");
         $("#feed").removeClass("mobile");
     }
-});
-
-
-
-$("#home").click(function () {
-    main();
 });

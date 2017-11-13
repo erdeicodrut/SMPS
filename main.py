@@ -1,11 +1,10 @@
-import hashlib
-import json
+import hashlib, \
+    json, \
+    sqlite3, \
+    time
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import sqlite3
-import time
-import os
 
 from structs import *
 
@@ -25,10 +24,23 @@ def root():
 
     index = open("templates/index.html")
 
-    return index.read().__str__()\
-        .replace("{{l}}", lib.read().__str__())\
-        .replace("{{s}}", style.read().__str__())\
+    return index.read().__str__() \
+        .replace("{{l}}", lib.read().__str__()) \
+        .replace("{{s}}", style.read().__str__()) \
         .replace("{{i}}", js.read().__str__())
+
+
+@app.route('/getUser/<user>', methods=["GET"])
+def get_user(user):
+    lib = open("templates/lib.js")
+    style = open("templates/style.css")
+
+    index = open("templates/indexUser.html")
+
+    return index.read().__str__() \
+        .replace("{{l}}", lib.read().__str__()) \
+        .replace("{{s}}", style.read().__str__()) \
+        .replace("{{u}}", user)
 
 
 @app.route('/comment', methods=['POST'])
@@ -67,28 +79,21 @@ def unlike(what_id, user):
     return 'Success'
 
 
-@app.route('/getUser/<user>', methods=["GET"])
-def get_user(user):
-    lib = open("templates/lib.js")
-    style = open("templates/style.css")
-
-    index = open("templates/indexUser.html")
-
-    return index.read().__str__() \
-        .replace("{{l}}", lib.read().__str__()) \
-        .replace("{{s}}", style.read().__str__())\
-        .replace("{{u}}", user)
-
-
-@app.route('/user/<user>', methods=["GET"])
-def user_data(user):
+@app.route('/user/<user>/<key>', methods=["GET"])
+def user_data(user, key):
     # TODO add profile pic
+    # l = conn.cursor()
+    # l.execute('SELECT username FROM User WHERE password="{}"'.format(key))
+    # l = c.fetchone()
+    # print(l)
 
-    c.execute('SELECT * FROM Post WHERE user="' + user + '"')
+    # Doesn't work, see why
+
+    c.execute('SELECT * FROM Post WHERE user="{}"'.format(user))
 
     p = conn.cursor()
 
-    posts = []
+    posts = [Key(key)]
 
     for row in c.fetchall():
         post = Post(*row)
@@ -102,7 +107,6 @@ def user_data(user):
         posts.append(post)
 
     return jsonify([x.json() for x in posts])
-
 
 
 @app.route("/getPosts/<key>")
@@ -164,7 +168,6 @@ def create_user():
 
     print(data['password'])
 
-
     c.execute('INSERT INTO User VALUES(?, ?, ?)', (data['user'], data['password'], data['profile_pic']))
     conn.commit()
 
@@ -193,7 +196,7 @@ def login():
     print(password)
     print(data['password'])
     if password == data['password']:
-        return jsonify({'password':password})
+        return jsonify({'password': password})
     else:
         return jsonify({'error': 'incorrect login'})
 

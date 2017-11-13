@@ -171,3 +171,18 @@ a {
     border: none;
     background-color: transparent;
 }
+
+#userInfo {
+    display: flex;
+}
+
+#profilePic {
+    width: 30%;
+    height: 30%;
+}
+
+.userText {
+    padding: 20%;
+    font-size: 140%;
+}
+

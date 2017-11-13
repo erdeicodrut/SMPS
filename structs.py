@@ -47,3 +47,11 @@ class Like:
 
     def json(self):
         return self.__dict__
+
+
+class Key:
+    def __init__(self, key):
+        self.key = key
+
+    def json(self):
+        return self.__dict__

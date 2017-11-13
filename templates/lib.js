@@ -1,6 +1,6 @@
 function main(link) {
     $.getJSON(link, function (data) {
-        console.log("sa");
+        console.log(data)
         for (var i = 0; i < data.length; i++) {
             console.log(data[i]);
             $("#feed").append(createItem(
@@ -72,10 +72,20 @@ function find(who, where) {
 }
 
 function fetchLikes(data) {
-    if (find(MYUSER, data.likes))
-        like = "Dislike";
-    else 
-        like = "Like"; 
+    try {
+        if (find(MYUSER, data.likes))
+            like = "Dislike";
+        else
+            like = "Like";
+        }
+    catch (e) {
+        if (data.likes == MYUSER) {
+            like = "Dislike";
+        }
+        else {
+            like = "Like";
+        }
+    }
 
     $(`#feed #post${data.id} .commentContainer`).append(
                 `<div class="likecontainer"><input class="likebutton"
@@ -85,7 +95,6 @@ type="button" value="${like}" id="likeButton${data.id}" class="likeButton">
 
 function fetchComments(data) {
     for (var j = 0; j < data.comments.length; j++) {
-                    console.log(data.comments[j])
                     $(`#feed #post${data.id} .commentContainer`)
                         .append(createComment(
                             data.comments[j].from_user,
@@ -112,7 +121,7 @@ function createItem(i, profilepic, username, pic) {
 }
 
 function createComment(user, comment) {
-    let userLink = `http://localhost:8080/getUser/${user}`;
+    let userLink = "http://localhost:8080/getUser/" + user;
     return `<li class="comment"><b><a href="${userLink}">${user}</a> </b>${comment}</li>`
 }
 
