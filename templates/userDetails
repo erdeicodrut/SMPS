@@ -1,0 +1,10 @@
+<li>
+        <div id="userInfo" class="feedItem">
+            <img id="profilePic" src="{{profilePic}}"/>
+            <div>
+                <div id="usernameText" class="userText">{{username}}</div>
+                    <div id="numOfPosts" class="userText">{{numOfPosts}}</div>
+                <div id="numOfFollowers" class="userText">{{numOfFollowers}}</div>
+            </div>
+        </div>
+    </li>

@@ -11,10 +11,12 @@
         $(document).ready(function() {
             MYUSER = sessionStorage.getItem("username");
             KEY = sessionStorage.getItem("key");
+            $("#username").text(MYUSER);
             main("http://localhost:8080/user/{{u}}/" + KEY);
         });
 
         $(window).ready(function () {
+
             if (window.innerWidth < 1080) {
                 $("#feed").addClass("mobile");
                 $("#feed").removeClass("web");
@@ -25,15 +27,16 @@
         });
 
 function main(link) {
+
     $.getJSON(link, function (data) {
         KEY = data[0]['key'];
         data.splice(0, 1);
         console.log(data);
-        for (var i = 0; i < data.length; i++) {
+        for (var i = data.length - 1; i >= 0; i--) {
             console.log(data[i]);
             $("#feed").append(createItem(
                 data[i].id,
-                imgur + data[i].photo,
+                imgur + data[i].profile_pic,
                 data[i].user,
                 imgur + data[i].photo)
             );
@@ -141,7 +144,7 @@ function createItem(i, profilepic, username, pic) {
     <li id="post${i}" class="feedItem">
         <div class="PN">
             <img class="profilepic" src="${profilepic}">
-            <div class="name">${username}</div>
+            <a href="http://localhost:8080/getUser/${username}" class="name">${username}</a>
         </div>
             <img src="${pic}" class="pic">
             <ul class="commentContainer">
@@ -186,11 +189,11 @@ function saveCardImage() {
 <body>
 <nav>
     <ul>
-        <li><a id='home' class="active">Home</a></li>
-        <li class="dick">
-            <a href="#dick">
+        <li><a href="http://localhost:8080" id='home' class="active">Home</a></li>
+        <li class="well">
+            <a href="#">
                 <div id="username">
-                    dicks
+                    Username
                 </div>
             </a>
         </li>
@@ -200,17 +203,7 @@ function saveCardImage() {
 
 
 <ul id="feed">
-    <li>
-        <div id="userInfo" class="feedItem">
-            <img id="profilePic" src="https://i.imgur.com/3aKqm4m.jpg"/>
-            <div>
-                <div id="usernameText" class="userText">Username</div>
-                <div id="numOfPosts" class="userText">Posts</div>
-                <div id="numOfFollowers" class="userText">Followers</div>
-
-            </div>
-        </div>
-    </li>
+    {{userdetails}}
 
 
     <div id="log"></div>

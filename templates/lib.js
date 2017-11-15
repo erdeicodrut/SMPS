@@ -1,11 +1,12 @@
 function main(link) {
+    $("#upload").toggle();
     $.getJSON(link, function (data) {
         console.log(data)
-        for (var i = 0; i < data.length; i++) {
+        for (var i = data.length - 1; i >= 0; i--) {
             console.log(data[i]);
             $("#feed").append(createItem(
                 data[i].id, 
-                imgur + data[i].photo, 
+                imgur + data[i].profile_pic,
                 data[i].user, 
                 imgur + data[i].photo)
             );
@@ -110,7 +111,7 @@ function createItem(i, profilepic, username, pic) {
     <li id="post${i}" class="feedItem">
         <div class="PN">
             <img class="profilepic" src="${profilepic}">
-            <div class="name">${username}</div>
+            <a href="http://localhost:8080/getUser/${username}" class="name">${username}</a>
         </div>
             <img src="${pic}" class="pic">
             <ul class="commentContainer">
@@ -126,10 +127,21 @@ function createComment(user, comment) {
 }
 
 
-// <input id="browse-image" type="file" accept="image/png,image/jpeg" onchange="previewImage()" required>
+function previewImage(myID, id) {
+        let input = $("#" + myID)[0];
+        if (input.files && input.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $("#" + id).attr("src", e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
 function saveCardImage() {
     let image;
     let input = $("#browse-image")[0];
+    let description;
     if (!(input.files && input.files[0])) return;
 
     $.ajax({
@@ -141,10 +153,36 @@ function saveCardImage() {
         success: function(response) {
             if(response.success) {
                 console.log(response.data.link);
-                image = response.data.link.split("http://i.imgur.com/")[1];
+                image = response.data.link.split("https://i.imgur.com/")[1];
             } else {
                 image = "*";
             }
+
+            description = $("#descriptionText").val() || "*";
+
+            let nextReq = `{"user":"${MYUSER}","photo":"${image}","description":"${description}"}`;
+            console.log(nextReq);
+
+
+             $.ajax({
+                contentType: 'application/json',
+                data: nextReq,
+                dataType: 'json',
+                processData: false,
+                type: 'POST',
+                url: "http://localhost:8080/post",
+                success: function(response) {
+                    if(response.success) {
+                        console.log(response.data.link);
+                        image = response.data.link.split("http://i.imgur.com/")[1];
+                    } else {
+                        image = "*";
+                    }
+                }
+            });
         }
     });
+
+
 }
+

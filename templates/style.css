@@ -31,7 +31,7 @@ body {
     padding: 0;
 }
 
-.dick {
+.well {
     float: right;
 }
 
@@ -179,6 +179,7 @@ a {
 #profilePic {
     width: 30%;
     height: 30%;
+    border-radius: 100%;
 }
 
 .userText {
@@ -186,3 +187,11 @@ a {
     font-size: 140%;
 }
 
+#postBtn {
+    float: right
+}
+
+#image-preview {
+    height: 300px;
+    width: 300px;
+}

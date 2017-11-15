@@ -11,19 +11,31 @@
 <nav>
     <ul>
         <li><a id='home' class="active">Home</a></li>
-        <li class="dick">
-            <a href="#dick">
+        <li class="well">
+            <a href="http://localhost:8080">
                 <div id="username">
-                    dicks
+                    Username
                 </div>
             </a>
         </li>
-
+        <li class="well">
+            <a href="#">
+                <input type="button" id="upload" hidden>
+                    Upload
+                </div>
+            </a>
+        </li>
     </ul>
 </nav>
 
 <ul id="feed">
-    <div id="log"></div>
+    <div id="log" clas="feedItem"></div>
+        <div id="uploadDiv" class="feedItem">
+            <input id="browse-image" type="file" accept="image/png,image/jpeg" onchange="previewImage('browse-image', 'image-preview')" required>
+            <img id="image-preview" src=""/>
+            <input type="text" id="descriptionText" placeholder="What's that?">
+            <input type="button" id="postBtn" onclick="saveCardImage()" value="Upload">
+        </div>
 </ul>
 
 </body>

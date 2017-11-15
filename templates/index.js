@@ -3,10 +3,25 @@ var MYUSER = "eumomentan";
 var KEY = "s";
 
 $(document).ready(function() {
-    $("#log").append(`<input type="text" id="userfield" class="gonnaDissapare" placeholder="Username">`);
-    $("#log").append(`<input type="password" id="pass" placeholder="Password" class="gonnaDissapare">`);
-    $("#log").append(`<input type="button" value="LogIn" id="login" class="gonnaDissapare">`);
-    $("#log").append(`<input type="button" value="SignUp" id="signup" class="gonnaDissapare">`);
+    $("#uploadDiv").hide();
+    MYUSER = sessionStorage.getItem("username");
+    KEY = sessionStorage.getItem("key");
+
+    if (MYUSER !== null && KEY !== null) {
+        $(".gonnaDissapare").hide();
+        $("#username").html(MYUSER);
+        main("http://localhost:8080/getPosts/" + KEY);
+    } else {
+        $("#log").append(`<input type="text" id="userfield" class="gonnaDissapare" placeholder="Username">`);
+        $("#log").append(`<input type="password" id="pass" placeholder="Password" class="gonnaDissapare">`);
+        $("#log").append(`<input type="button" value="LogIn" id="login" class="gonnaDissapare">`);
+        $("#log").append(`<input type="button" value="SignUp" id="signup" class="gonnaDissapare">`);
+    }
+
+    $("#upload").on("click", function() {
+        $("#feedItem").hide();
+        $("#uploadDiv").show();
+    })
 
 
     $("#login").click(function(){
@@ -29,7 +44,7 @@ $(document).ready(function() {
 
                     $(".gonnaDissapare").hide();
                     $("#username").html(MYUSER);
-                    main(`http://localhost:8080/getPosts/${KEY}`);
+                    main("http://localhost:8080/getPosts/" + KEY);
                 } else {
                     $("#feed").html("NOPE");
                 }
@@ -42,17 +57,41 @@ $(document).ready(function() {
         $("#log").append(`<input type="password" id="pass2" placeholder="Repeat password" class="gonnaDissapare">`);
         $(this).hide();
         $("#log").append(`<input type="button" value="SignUp" id="signup2" class="gonnaDissapare">`);
+
+        $("#log").append(`<input id="browse-image-singup" type="file" accept="image/png,image/jpeg" onchange="previewImage('browse-image-singup', 'profilepicpreview')" class="gonnaDissapare" required>`);
+        $("#log").append(`<img id="profilepicpreview"  class="gonnaDissapare" src=""/>`);
         $("#signup2").click(function() {
             let user = $("#userfield").val();
             let pass = $("#pass").val();
             console.log("yay");
+
+            let image;
+            let input = $("#browse-image-singup")[0];
+            if (!(input.files && input.files[0])) return;
+
             $.ajax({
-                contentType: 'application/json',
-                data: `{"user":"${user}","password":"${pass}","profile_pic":"*"}`,
+                url: "https://api.imgur.com/3/image",
+                type: "post",
+                headers:{ Authorization: 'Client-ID 456787c11f9dba5' },
+                data: { image: $("#profilepicpreview").attr("src").split(",")[1] },
                 dataType: 'json',
-                processData: false,
-                type: 'POST',
-                url: "http://localhost:8080/create"
+                success: function(response) {
+                    if(response.success) {
+                        console.log(response.data.link);
+                        image = response.data.link.split("https://i.imgur.com/")[1];
+                    } else {
+                        image = "*";
+                    }
+
+                    $.ajax({
+                        contentType: 'application/json',
+                        data: `{"user":"${user}","password":"${pass}","profile_pic":"${image}"}`,
+                        dataType: 'json',
+                        processData: false,
+                        type: 'POST',
+                        url: "http://localhost:8080/create"
+                    });
+                }
             });
         });
     });
