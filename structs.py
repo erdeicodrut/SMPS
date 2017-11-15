@@ -18,6 +18,7 @@ class Post:
         self.date = date
         self.likes = []
         self.comments = []
+        self.profile_pic = ""
 
     def get_likes(self, rows):
         [self.likes.append(x[0]) for x in rows]

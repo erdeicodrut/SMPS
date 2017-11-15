@@ -15,6 +15,8 @@ CORS(app)
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
+imgur = "http://i.imgur.com/"
+
 
 @app.route("/")
 def root():
@@ -34,12 +36,28 @@ def root():
 def get_user(user):
     lib = open("templates/lib.js")
     style = open("templates/style.css")
+    user_details = open("templates/userDetails")
 
     index = open("templates/indexUser.html")
+
+    c.execute('SELECT profilepic FROM User WHERE username="{}"'.format(user))
+
+    profile_pic = c.fetchone()[0]
+
+    c.execute('SELECT COUNT(id) FROM Post WHERE user="{}"'.format(user))
+
+    count = c.fetchone()[0]
+
+    user_details = user_details.read().__str__() \
+        .replace("{{profilePic}}", imgur + profile_pic) \
+        .replace("{{username}}", user) \
+        .replace("{{numOfPosts}}", str(count) + " Posts") \
+        .replace("{{numOfFollowers}}", str(10) + " Followers") # TODO PLACE HOLER
 
     return index.read().__str__() \
         .replace("{{l}}", lib.read().__str__()) \
         .replace("{{s}}", style.read().__str__()) \
+        .replace("{{userdetails}}", user_details) \
         .replace("{{u}}", user)
 
 
@@ -50,6 +68,11 @@ def comment():
 
     data = json.loads(request.data)
 
+    c.execute('SELECT COUNT(id) FROM Post WHERE id="{}"'.format(data['post_id']))
+
+    if c.fetchone()[0] == 0:
+        return 'No such post exists'
+
     c.execute('INSERT INTO Comment VALUES(NULL, ?, ?, ?, ?) ',
               (data['text'], data['post_id'], time.time(), data['user']))
     conn.commit()
@@ -59,8 +82,16 @@ def comment():
 
 @app.route('/like/<what_id>/<user>')
 def like(what_id, user):
-    # TODO verify if the user and the post exist
-    # TODO verify if the like already is registerd
+    c.execute('SELECT COUNT(id) FROM Like WHERE to_post={} AND user={}'.format(what_id, user))
+
+    if c.fetchone()[0] > 0:
+        return 'Like already exists'
+
+    c.execute('SELECT COUNT(username) FROM User where username={}'.format(user))
+
+    if c.fetchone()[0] == 0:
+        return 'Who are you?'
+
     c.execute('INSERT INTO Like VALUES(NULL, ?, ?) ',
               (what_id, user))
     conn.commit()
@@ -86,8 +117,8 @@ def user_data(user, key):
     # l.execute('SELECT username FROM User WHERE password="{}"'.format(key))
     # l = c.fetchone()
     # print(l)
-
-    # Doesn't work, see why
+    #
+    # # Doesn't work, see why
 
     c.execute('SELECT * FROM Post WHERE user="{}"'.format(user))
 
@@ -98,11 +129,14 @@ def user_data(user, key):
     for row in c.fetchall():
         post = Post(*row)
 
-        p.execute('SELECT user FROM Like WHERE to_post=' + str(post.id))
+        p.execute('SELECT user FROM Like WHERE to_post={}'.format(post.id))
         post.get_likes(p.fetchall())
 
-        p.execute('SELECT * FROM Comment WHERE to_post=' + str(post.id))
+        p.execute('SELECT * FROM Comment WHERE to_post={}'.format(post.id))
         post.get_comments(p.fetchall())
+
+        p.execute('SELECT profilepic FROM User WHERE username="{}"'.format(user))
+        post.profile_pic = p.fetchone()[0]
 
         posts.append(post)
 
@@ -124,11 +158,14 @@ def get_posts(key):
     for row in c.fetchall():
         post = Post(*row)
 
-        p.execute('SELECT user FROM Like WHERE to_post=' + str(post.id))
+        p.execute('SELECT user FROM Like WHERE to_post={}'.format(post.id))
         post.get_likes(p.fetchall())
 
-        p.execute('SELECT * FROM Comment WHERE to_post=' + str(post.id))
+        p.execute('SELECT * FROM Comment WHERE to_post={}'.format(post.id))
         post.get_comments(p.fetchall())
+
+        p.execute('SELECT profilepic FROM User WHERE username="{}"'.format(post.user))
+        post.profile_pic = p.fetchone()[0]
 
         posts.append(post)
 
@@ -141,12 +178,18 @@ def post():
 
     data = json.loads(request.data)
 
+    c.execute('SELECT COUNT(username) FROM User where username="{}"'.format(data['user']))
+
+    if c.fetchone()[0] == 0:
+        return 'Who are you?'
+
     c.execute('INSERT INTO Post VALUES(NULL, ?, ?, ?)',
               (data['user'], data['photo'], time.time()))
     if data['description'] is not '*':
         c.execute('SELECT id FROM Post WHERE photo="' + data['photo'] + '"')
-        comment(c.fetchone()[0], data['user'], data['description'])
-    # to be reviewed
+
+        c.execute('INSERT INTO Comment VALUES(NULL, ?, ?, ?, ?) ',
+                  (data['description'], c.fetchone()[0], time.time(), data['user']))
 
     conn.commit()
 
@@ -190,7 +233,7 @@ def login():
     hash_object = hashlib.md5(data['password'].encode())
     data['password'] = hash_object.hexdigest()
 
-    c.execute('SELECT password FROM User WHERE username="' + (data['user']) + '"')
+    c.execute('SELECT password FROM User WHERE username="{}"'.format(data['user']))
 
     password = c.fetchone()[0]
     print(password)
@@ -203,3 +246,4 @@ def login():
 
 if __name__ == '__main__':
     app.run(host='localhost', port=8080, debug=False)
+
