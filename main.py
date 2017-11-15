@@ -82,12 +82,12 @@ def comment():
 
 @app.route('/like/<what_id>/<user>')
 def like(what_id, user):
-    c.execute('SELECT COUNT(id) FROM Like WHERE to_post={} AND user={}'.format(what_id, user))
+    c.execute('SELECT COUNT(id) FROM Like WHERE to_post={} AND user="{}"'.format(what_id, user))
 
     if c.fetchone()[0] > 0:
         return 'Like already exists'
 
-    c.execute('SELECT COUNT(username) FROM User where username={}'.format(user))
+    c.execute('SELECT COUNT(username) FROM User where username="{}"'.format(user))
 
     if c.fetchone()[0] == 0:
         return 'Who are you?'
