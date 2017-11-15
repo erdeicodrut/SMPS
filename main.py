@@ -1,9 +1,9 @@
-import hashlib, \
-    json, \
-    sqlite3, \
-    time
+import hashlib
+import json
+import sqlite3
+import time
 
-from flask import Flask, jsonify, request
+from flask import (Flask, jsonify, request)
 from flask_cors import CORS
 
 from structs import *
@@ -26,10 +26,10 @@ def root():
 
     index = open("templates/index.html")
 
-    return index.read().__str__() \
-        .replace("{{l}}", lib.read().__str__()) \
-        .replace("{{s}}", style.read().__str__()) \
-        .replace("{{i}}", js.read().__str__())
+    return (index.read().__str__() 
+        .replace("{{l}}", lib.read().__str__()) 
+        .replace("{{s}}", style.read().__str__())
+        .replace("{{i}}", js.read().__str__()))
 
 
 @app.route('/getUser/<user>', methods=["GET"])
@@ -48,17 +48,17 @@ def get_user(user):
 
     count = c.fetchone()[0]
 
-    user_details = user_details.read().__str__() \
-        .replace("{{profilePic}}", imgur + profile_pic) \
-        .replace("{{username}}", user) \
-        .replace("{{numOfPosts}}", str(count) + " Posts") \
-        .replace("{{numOfFollowers}}", str(10) + " Followers") # TODO PLACE HOLER
+    user_details = (user_details.read().__str__() 
+        .replace("{{profilePic}}", imgur + profile_pic) 
+        .replace("{{username}}", user) 
+        .replace("{{numOfPosts}}", str(count) + " Posts") 
+        .replace("{{numOfFollowers}}", str(10) + " Followers")) # TODO PLACE HOLER
 
-    return index.read().__str__() \
-        .replace("{{l}}", lib.read().__str__()) \
-        .replace("{{s}}", style.read().__str__()) \
-        .replace("{{userdetails}}", user_details) \
-        .replace("{{u}}", user)
+    return (index.read().__str__() 
+        .replace("{{l}}", lib.read().__str__()) 
+        .replace("{{s}}", style.read().__str__()) 
+        .replace("{{userdetails}}", user_details) 
+        .replace("{{u}}", user))
 
 
 @app.route('/comment', methods=['POST'])
@@ -185,9 +185,9 @@ def post():
 
     c.execute('INSERT INTO Post VALUES(NULL, ?, ?, ?)',
               (data['user'], data['photo'], time.time()))
+
     if data['description'] is not '*':
         c.execute('SELECT id FROM Post WHERE photo="' + data['photo'] + '"')
-
         c.execute('INSERT INTO Comment VALUES(NULL, ?, ?, ?, ?) ',
                   (data['description'], c.fetchone()[0], time.time(), data['user']))
 
@@ -211,7 +211,9 @@ def create_user():
 
     print(data['password'])
 
-    c.execute('INSERT INTO User VALUES(?, ?, ?)', (data['user'], data['password'], data['profile_pic']))
+    c.execute('INSERT INTO User VALUES(?, ?, ?)', 
+        (data['user'], data['password'], data['profile_pic']))
+
     conn.commit()
 
     return 'Success'
@@ -238,10 +240,10 @@ def login():
     password = c.fetchone()[0]
     print(password)
     print(data['password'])
+
     if password == data['password']:
         return jsonify({'password': password})
-    else:
-        return jsonify({'error': 'incorrect login'})
+    return jsonify({'error': 'incorrect login'})
 
 
 if __name__ == '__main__':
