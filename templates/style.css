@@ -217,7 +217,8 @@ a {
     transform: translateX(-50%);
 
     display: block;
-    height: 500px;
+    max-width: 700px;
+    max-height: 500px;
     padding: 10px;
 }
 
