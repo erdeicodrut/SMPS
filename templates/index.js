@@ -10,6 +10,7 @@ $(document).ready(function() {
     if (MYUSER !== null && KEY !== null) {
         $(".gonnaDissapare").hide();
         $("#username").html(MYUSER);
+        $("#username").attr("href", "http://localhost:8080/getUser/" + MYUSER);
         main("http://localhost:8080/getPosts/" + KEY);
     } else {
         $("#log").append(`<input type="text" id="userfield" class="gonnaDissapare" placeholder="Username">`);
