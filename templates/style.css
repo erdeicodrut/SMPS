@@ -1,5 +1,5 @@
 html {
-    font-family: sans-serif;
+    font-family: sans-serif, "Times New Roman", Times, serif;
 }
 
 nav ul {
@@ -204,10 +204,6 @@ a {
     display: block;
     margin: 0;
     padding: 10px;
-}
-
-#uploadDiv .paperclip {
-    font-size: 3em;
 }
 
 #uploadDiv .postToPost {

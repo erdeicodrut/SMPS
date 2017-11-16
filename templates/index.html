@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-32">
     <style type="text/css">{{s}}</style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>{{l}}</script>
@@ -10,13 +11,9 @@
 <body>
 <nav>
     <ul>
-        <li><a id='home' class="active">Home</a></li>
+        <li><a id='home' href="http://localhost:8080" class="active">Home</a></li>
         <li class="well">
-            <a href="http://localhost:8080">
-                <div id="username">
-                    Username
-                </div>
-            </a>
+            <a id="username" href="#">Username</a>
         </li>
         <li class="well">
             <a href="#">
@@ -35,7 +32,7 @@
             <input id="browse-image" type="file" accept="image/png,image/jpeg" style="display:none;" required>
 
             <div class="upload-image">
-                <p class="paperclip">&#128206;</p>
+                <img src="static/img/paperclip.png" height="70px" style="margin-top: 10px;" alt="">
                 <p>Upload image</p>
             </div>
 
