@@ -21,7 +21,18 @@ $(document).ready(function() {
     $("#upload").on("click", function() {
         $("#feedItem").hide();
         $("#uploadDiv").show();
-    })
+    });
+
+    // Alex
+    $(".upload-image").click(function() {
+        $("#browse-image").click();
+    });
+
+    $("#browse-image").change(function() {
+        $(".upload-image").hide();
+        $(".postToPost").show();
+        previewImage('browse-image', 'image-preview');
+    });
 
 
     $("#login").click(function(){
