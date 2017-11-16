@@ -29,12 +29,21 @@
 </nav>
 
 <ul id="feed">
-    <div id="log" clas="feedItem"></div>
+    <div id="log" class="feedItem"></div>
+
         <div id="uploadDiv" class="feedItem">
-            <input id="browse-image" type="file" accept="image/png,image/jpeg" onchange="previewImage('browse-image', 'image-preview')" required>
-            <img id="image-preview" src=""/>
-            <input type="text" id="descriptionText" placeholder="What's that?">
-            <input type="button" id="postBtn" onclick="saveCardImage()" value="Upload">
+            <input id="browse-image" type="file" accept="image/png,image/jpeg" style="display:none;" required>
+
+            <div class="upload-image">
+                <p class="paperclip">&#128206;</p>
+                <p>Upload image</p>
+            </div>
+
+            <div class="postToPost" style="display: none;">
+                <img id="image-preview" src=""/>
+                <input type="text" id="descriptionText" placeholder="What's that?">
+                <input type="button" id="postBtn" onclick="saveCardImage()" value="Upload">
+            </div>
         </div>
 </ul>
 
