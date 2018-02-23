@@ -143,7 +143,7 @@ def user_data(user, key):
     return jsonify([x.json() for x in posts])
 
 
-@app.route("/getPosts/<key>")
+@app.route("/getPosts/<key>", methods=["POST", "GET"])
 def get_posts(key):
     # TODO thingy about followers and following
 
@@ -228,7 +228,7 @@ def modify(user, attribute, to_what):
     return 'Success'
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=["POST", "GET"])
 def login():
     data = json.loads(request.data)
 
@@ -246,6 +246,78 @@ def login():
     return jsonify({'error': 'incorrect login'})
 
 
+
+# # hacky
+
+# @app.route('/create/<user>/<password>/<profile_pic>/')
+# def Hcreate_user():
+    
+#     hash_object = hashlib.md5(password.encode())
+#     dpassword = hash_object.hexdigest()
+
+#     if profile_pic is '*':
+#         profile_pic = DEFAULT_PROFILE_PIC
+
+#     print(password)
+
+#     c.execute('INSERT INTO User VALUES(?, ?, ?)', 
+#         (user, password, profile_pic))
+
+#     conn.commit()
+
+#     return 'Success'
+
+# @app.route('/comment/<post_id>/<user>/<text>')
+# def Hcomment():
+#     # TODO verify if the post exists and if the user exists
+#     c.execute('SELECT COUNT(id) FROM Post WHERE id="{}"'.format(post_id))
+
+#     if c.fetchone()[0] == 0:
+#         return 'No such post exists'
+
+#     c.execute('INSERT INTO Comment VALUES(NULL, ?, ?, ?, ?) ',
+#               (text, post_id, time.time(), user))
+#     conn.commit()
+
+#     return 'Success'
+
+# @app.route('/post/<user>/<photo>/<description>')
+# def Hpost():
+#     # TODO verify if the user exists
+
+#     c.execute('SELECT COUNT(username) FROM User where username="{}"'.format(user))
+
+#     if c.fetchone()[0] == 0:
+#         return 'Who are you?'
+
+#     c.execute('INSERT INTO Post VALUES(NULL, ?, ?, ?)',
+#               (user, photo, time.time()))
+
+#     if description is not '*':
+#         c.execute('SELECT id FROM Post WHERE photo="' + photo + '"')
+#         c.execute('INSERT INTO Comment VALUES(NULL, ?, ?, ?, ?) ',
+#                   (description, c.fetchone()[0], time.time(), user))
+
+#     conn.commit()
+
+#     return 'all good'
+
+# @app.route('/login/<user>/<password>')
+# def Hlogin(user, password):
+
+#     hash_object = hashlib.md5(password.encode())
+#     password = hash_object.hexdigest()
+
+#     print(password)
+
+#     c.execute('SELECT password FROM User WHERE username="{}"'.format(user))
+
+#     passw = c.fetchone()[0]
+
+#     if passw == password:
+#         return jsonify({'password': passw})
+#     return jsonify({'error': 'incorrect login'})
+
+
 if __name__ == '__main__':
     app.run(host='localhost', port=8080, debug=False)
-
