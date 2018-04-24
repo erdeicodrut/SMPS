@@ -1,3 +1,6 @@
+const local = "{{local}}";
+
+
 function main(link) {
     $("#upload").toggle();
     $.getJSON(link, function (data) {
@@ -19,13 +22,13 @@ function main(link) {
                 var id = parseInt($(this).attr('id').split('likeButton')[1]);
 
                 if ($(this).val() == "Like") {
-                    $.get( `http://localhost:8080/like/${id}/${MYUSER}`, function( data ) {
+                    $.get( `http://{{local}}/like/${id}/${MYUSER}`, function( data ) {
                         console.log(`liked post nr ${id}`);
                     });
                     $(`#post${id} #numOfLikes`).html(parseInt($(`#post${id} #numOfLikes`).html()) + 1);
                     $(this).val("Dislike");
                 } else {
-                    $.get( `http://localhost:8080/unlike/${id}/${MYUSER}`, function( data ) {
+                    $.get( `http://{{local}}/unlike/${id}/${MYUSER}`, function( data ) {
                         console.log(`liked post nr ${id}`);
                     });
                     $(`#post${id} #numOfLikes`).html(parseInt($(`#post${id} #numOfLikes`).html()) - 1);
@@ -45,7 +48,7 @@ function main(link) {
                         dataType: 'json',
                         processData: false,
                         type: 'POST',
-                        url: "http://localhost:8080/comment"
+                        url: "http://{{local}}/comment"
                     });
 
                     $(`#feed #post${id} .commentContainer`)
@@ -111,7 +114,7 @@ function createItem(i, profilepic, username, pic) {
     <li id="post${i}" class="feedItem">
         <div class="PN">
             <img class="profilepic" src="${profilepic}">
-            <a href="http://localhost:8080/getUser/${username}" class="name">${username}</a>
+            <a href="http://{{local}}/getUser/${username}" class="name">${username}</a>
         </div>
             <img src="${pic}" class="pic">
             <ul class="commentContainer">
@@ -122,7 +125,7 @@ function createItem(i, profilepic, username, pic) {
 }
 
 function createComment(user, comment) {
-    let userLink = "http://localhost:8080/getUser/" + user;
+    let userLink = "http://{{local}}/getUser/" + user;
     return `<li class="comment"><b><a href="${userLink}">${user}</a> </b>${comment}</li>`
 }
 
@@ -170,7 +173,7 @@ function saveCardImage() {
                 dataType: 'json',
                 processData: false,
                 type: 'POST',
-                url: "http://localhost:8080/post",
+                url: "http://{{local}}/post",
                 success: function(response) {
                     if(response.success) {
                         console.log(response.data.link);
@@ -180,6 +183,8 @@ function saveCardImage() {
                     }
                 }
             });
+
+            location.reload();
         }
     });
 

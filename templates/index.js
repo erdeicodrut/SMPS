@@ -1,4 +1,5 @@
 const imgur = "https://imgur.com/";
+// const local = "{{local}}";
 var MYUSER = "eumomentan";
 var KEY = "s";
 
@@ -10,7 +11,7 @@ $(document).ready(function() {
     if (MYUSER !== null && KEY !== null) {
         $(".gonnaDissapare").hide();
         $("#username").html(MYUSER);
-        main("http://localhost:8080/getPosts/" + KEY);
+        main("http://{{local}}/getPosts/" + KEY);
     } else {
         $("#log").append(`<input type="text" id="userfield" class="gonnaDissapare" placeholder="Username">`);
         $("#log").append(`<input type="password" id="pass" placeholder="Password" class="gonnaDissapare">`);
@@ -38,14 +39,16 @@ $(document).ready(function() {
     $("#login").click(function(){
         let user = $("#userfield").val();
         let pass = $("#pass").val();
+
         $.ajax({
             contentType: 'application/json',
             data: `{"user":"${user}","password":"${pass}"}`,
             dataType: 'json',
             processData: false,
             type: 'POST',
-            url: "http://localhost:8080/login",
+            url: "http://{{local}}/login",
             success: function(data) {
+
                 if (data.password) {
                     KEY = data.password;
                     MYUSER = user;
@@ -55,7 +58,12 @@ $(document).ready(function() {
 
                     $(".gonnaDissapare").hide();
                     $("#username").html(MYUSER);
-                    main("http://localhost:8080/getPosts/" + KEY);
+                    $("#usernameL").attr("a", "http://{{local}}/getUser/${MYUSER}");
+                    $("#usernameL").click( () => {
+                        window.location.replace("http://{{local}}/getUser/${MYUSER}"); 
+                    } ); //BUG
+
+                    main("http://{{local}}/getPosts/" + KEY);
                 } else {
                     $("#feed").html("NOPE");
                 }
@@ -100,8 +108,10 @@ $(document).ready(function() {
                         dataType: 'json',
                         processData: false,
                         type: 'POST',
-                        url: "http://localhost:8080/create"
+                        url: "http://{{local}}/create"
                     });
+
+                    location.reload();
                 }
             });
         });
@@ -112,7 +122,7 @@ $(document).ready(function() {
 
 
 $(window).ready(function () {
-    if (window.innerWidth < 1080) {
+    if (window.innerWidth < window.innerHeight) {
         $("#feed").addClass("mobile");
         $("#feed").removeClass("web");
     } else {

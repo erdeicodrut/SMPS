@@ -4,6 +4,7 @@
     <style type="text/css">{{s}}</style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
+        const local = "{{local}}";
         const imgur = "https://imgur.com/";
         var MYUSER = "eumomentan";
         var KEY = "s";
@@ -12,12 +13,12 @@
             MYUSER = sessionStorage.getItem("username");
             KEY = sessionStorage.getItem("key");
             $("#username").text(MYUSER);
-            main("http://localhost:8080/user/{{u}}/" + KEY);
+            main(`http://{{local}}/user/{{u}}/` + KEY);
         });
 
         $(window).ready(function () {
 
-            if (window.innerWidth < 1080) {
+            if (window.innerWidth < window.innerHeight) {
                 $("#feed").addClass("mobile");
                 $("#feed").removeClass("web");
             } else {
@@ -51,13 +52,13 @@ function main(link) {
                 var id = parseInt($(this).attr('id').split('likeButton')[1]);
 
                 if ($(this).val() == "Like") {
-                    $.get( `http://localhost:8080/like/${id}/${MYUSER}`, function( data ) {
+                    $.get( `http://{{local}}/like/${id}/${MYUSER}`, function( data ) {
                         console.log(`liked post nr ${id}`);
                     });
                     $(`#post${id} #numOfLikes`).html(parseInt($(`#post${id} #numOfLikes`).html()) + 1);
                     $(this).val("Dislike");
                 } else {
-                    $.get( `http://localhost:8080/unlike/${id}/${MYUSER}`, function( data ) {
+                    $.get( `http://{{local}}/unlike/${id}/${MYUSER}`, function( data ) {
                         console.log(`liked post nr ${id}`);
                     });
                     $(`#post${id} #numOfLikes`).html(parseInt($(`#post${id} #numOfLikes`).html()) - 1);
@@ -77,7 +78,7 @@ function main(link) {
                         dataType: 'json',
                         processData: false,
                         type: 'POST',
-                        url: "http://localhost:8080/comment"
+                        url: "http://{{local}}/comment"
                     });
 
                     $(`#feed #post${id} .commentContainer`)
@@ -144,7 +145,7 @@ function createItem(i, profilepic, username, pic) {
     <li id="post${i}" class="feedItem">
         <div class="PN">
             <img class="profilepic" src="${profilepic}">
-            <a href="http://localhost:8080/getUser/${username}" class="name">${username}</a>
+            <a href="http://{{local}}/getUser/${username}" class="name">${username}</a>
         </div>
             <img src="${pic}" class="pic">
             <ul class="commentContainer">
@@ -155,7 +156,7 @@ function createItem(i, profilepic, username, pic) {
 }
 
 function createComment(user, comment) {
-    let userLink = "http://localhost:8080/getUser/" + user;
+    let userLink = "http://{{local}}/getUser/" + user;
     return `<li class="comment"><b><a href="${userLink}">${user}</a> </b>${comment}</li>`
 }
 
@@ -189,7 +190,7 @@ function saveCardImage() {
 <body>
 <nav>
     <ul>
-        <li><a href="http://localhost:8080" id='home' class="active">Home</a></li>
+        <li><a href="http://{{local}}" id='home' class="active">Home</a></li>
         <li class="well">
             <a href="#">
                 <div id="username">

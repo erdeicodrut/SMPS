@@ -1,0 +1,28 @@
+Main activity {
+	Login / Register
+}
+
+Feed activity {
+	Top bar {
+		left : scroll to top
+		right : current user
+	}
+
+	Scrollable recycler view { 
+		Posts view
+	}
+}
+
+User activity {
+	Top bar {
+		left : scroll to top
+		right : current user
+	}
+
+	Scrollable recycler view { 
+		First element {
+			Details about user
+		}
+		Posts view
+	}	
+}

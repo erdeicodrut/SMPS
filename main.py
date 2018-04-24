@@ -10,12 +10,12 @@ from structs import *
 
 app = Flask(__name__)
 
-CORS(app)
 
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
 imgur = "http://i.imgur.com/"
+link_to_local = "localhost:8080"
 
 
 @app.route("/")
@@ -29,7 +29,8 @@ def root():
     return (index.read().__str__() 
         .replace("{{l}}", lib.read().__str__()) 
         .replace("{{s}}", style.read().__str__())
-        .replace("{{i}}", js.read().__str__()))
+        .replace("{{i}}", js.read().__str__())
+        .replace("{{local}}", link_to_local))
 
 
 @app.route('/getUser/<user>', methods=["GET"])
@@ -52,13 +53,15 @@ def get_user(user):
         .replace("{{profilePic}}", imgur + profile_pic) 
         .replace("{{username}}", user) 
         .replace("{{numOfPosts}}", str(count) + " Posts") 
-        .replace("{{numOfFollowers}}", str(10) + " Followers")) # TODO PLACE HOLER
+        .replace("{{numOfFollowers}}", str(10) + " Followers") # TODO PLACE HOLER
+        .replace("{{local}}", link_to_local))
 
     return (index.read().__str__() 
         .replace("{{l}}", lib.read().__str__()) 
         .replace("{{s}}", style.read().__str__()) 
         .replace("{{userdetails}}", user_details) 
-        .replace("{{u}}", user))
+        .replace("{{u}}", user)
+        .replace("{{local}}", link_to_local))
 
 
 @app.route('/comment', methods=['POST'])
@@ -80,7 +83,7 @@ def comment():
     return 'Success'
 
 
-@app.route('/like/<what_id>/<user>')
+@app.route('/like/<what_id>/<user>', methods=["GET", "POST"])
 def like(what_id, user):
     c.execute('SELECT COUNT(id) FROM Like WHERE to_post={} AND user="{}"'.format(what_id, user))
 
@@ -99,7 +102,7 @@ def like(what_id, user):
     return 'Success'
 
 
-@app.route('/unlike/<what_id>/<user>')
+@app.route('/unlike/<what_id>/<user>', methods=["GET", "POST"])
 def unlike(what_id, user):
     # TODO verify if the user and the post exist
     # TODO verify if the like already is registerd
@@ -196,7 +199,7 @@ def post():
     return 'all good'
 
 
-DEFAULT_PROFILE_PIC = 'Dow9D0J.jpg'
+DEFAULT_PROFILE_PIC = 'SyBYDPl.png'
 
 
 @app.route('/create', methods=['POST'])
